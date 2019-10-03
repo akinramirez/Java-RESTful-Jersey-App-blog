@@ -15,7 +15,6 @@ public class Articulo {
   private String contenido;
   private Calendar creado;
   private String autor;
-
   private List<Comentario> comentarios = new ArrayList<>();
 
   public Articulo() {
@@ -68,7 +67,7 @@ public class Articulo {
   public void setAutor(String autor) {
     this.autor = autor;
   }
-
+  
   @XmlTransient
   public List<Comentario> getComentarios() {
     return comentarios;

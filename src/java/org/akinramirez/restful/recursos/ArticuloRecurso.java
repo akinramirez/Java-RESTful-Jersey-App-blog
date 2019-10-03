@@ -1,7 +1,7 @@
 package org.akinramirez.restful.recursos;
 
+import java.net.URI;
 import java.util.List;
-import javax.validation.constraints.Past;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -11,7 +11,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import org.akinramirez.restful.modelo.Articulo;
 import org.akinramirez.restful.servicio.ArticuloServicio;
 
@@ -43,8 +46,11 @@ public class ArticuloRecurso {
   }
 
   @POST
-  public Articulo addArticulo(Articulo articulo) {
-    return artServicio.addArticulo(articulo);
+  public Response addArticulo(Articulo articulo, @Context UriInfo uriInfo) {
+    Articulo respuesta = artServicio.addArticulo(articulo);
+    //return Response.status(Response.Status.CREATED).entity(respuesta).build();
+    URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(respuesta.getId())).build();
+    return Response.created(uri).entity(respuesta).build();
   }
 
   @DELETE
@@ -59,9 +65,9 @@ public class ArticuloRecurso {
     articulo.setId(id);
     return artServicio.updateArticulo(articulo);
   }
-  
+
   @Path("/{articuloId}/comentarios")
-  public ComentarioRecurso getComentarios(){
+  public ComentarioRecurso getComentarios() {
     return new ComentarioRecurso();
   }
 
