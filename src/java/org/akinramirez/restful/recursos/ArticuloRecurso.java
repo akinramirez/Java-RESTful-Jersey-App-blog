@@ -16,6 +16,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import org.akinramirez.restful.modelo.Articulo;
+import org.akinramirez.restful.modelo.Navegacion;
 import org.akinramirez.restful.servicio.ArticuloServicio;
 
 @Path("/articulos")
@@ -41,8 +42,16 @@ public class ArticuloRecurso {
 
   @GET
   @Path("/{articuloId}")
-  public Articulo getArticulo(@PathParam("articuloId") int id) {
-    return artServicio.getArticulo(id);
+  public Articulo getArticulo(@PathParam("articuloId") int id,
+          @Context UriInfo uriInfo) {
+    Articulo respuesta = artServicio.getArticulo(id);
+    String linkSelf = uriInfo.getAbsolutePath().toString();
+    String linkComm = linkSelf+"/comentarios";
+    Navegacion self = new Navegacion("Recurso", linkSelf, "Locacion del recurso");
+    Navegacion comm = new Navegacion("Comentario", linkComm, "Locacion de los comentarios");
+    respuesta.getNavegacion().add(self);
+    respuesta.getNavegacion().add(comm);
+    return respuesta;
   }
 
   @POST
